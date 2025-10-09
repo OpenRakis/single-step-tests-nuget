@@ -1,0 +1,10 @@
+# Build and packaging artifacts
+*-repo/
+*-tests/
+*-tests-*/
+*.zip
+nuget-*/
+
+# NuGet packages
+*.nupkg
+*.snupkg

@@ -1,0 +1,78 @@
+name: Package and Publish Single Step Tests
+
+on:
+  #schedule:
+    # Run weekly on Monday at 00:00 UTC to check for updates
+    #- cron: '0 0 * * 1'
+  workflow_dispatch:
+    # Allow manual trigger
+    inputs:
+      force_publish:
+        description: 'Force publish even if no changes'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  package-and-publish:
+    name: Package and Publish ${{ matrix.cpu }} Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    
+    strategy:
+      matrix:
+        include:
+          - cpu: "8088"
+            ranges: "00-3F 40-7F 80-9F A0-BF C0-DF E0-FF"
+            repo_url: "https://github.com/SingleStepTests/8088"
+            test_dir: "v2"
+            needs_python: false
+          - cpu: "80286"
+            ranges: "00-3F 40-7F 80-BF C0-FF"
+            repo_url: "https://github.com/SingleStepTests/80286"
+            test_dir: "v1_real_mode"
+            needs_python: true
+    
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      
+      - name: Setup Python
+        if: matrix.needs_python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Extract all tests
+        id: extract
+        run: |
+          ./scripts/extract-tests.sh ${{ matrix.cpu }} ${{ matrix.repo_url }}.git ${{ matrix.test_dir }}
+      
+      - name: Split tests by range and create packages
+        run: |
+          for range in ${{ matrix.ranges }}; do
+            echo "================================================"
+            echo "Processing range: $range"
+            echo "================================================"
+            
+            # Split tests and create ZIP
+            ./scripts/split-tests.sh ${{ matrix.cpu }} "$range"
+            
+            # Create NuGet package
+            ./scripts/package-nuget.sh \
+              ${{ matrix.cpu }} \
+              "$range" \
+              "${{ steps.extract.outputs.VERSION }}" \
+              "${{ steps.extract.outputs.COMMIT_HASH }}" \
+              "${{ steps.extract.outputs.COMMIT_DATE_FULL }}" \
+              "${{ matrix.repo_url }}"
+          done
+      
+      - name: Upload all packages to NuGet
+        run: |
+          ./scripts/upload-nuget.sh ${{ secrets.NUGET_API_KEY }}
