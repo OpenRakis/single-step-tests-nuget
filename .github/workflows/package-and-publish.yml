@@ -22,6 +22,11 @@ jobs:
     strategy:
       matrix:
         include:
+          - cpu: "8086"
+            ranges: "00-FF"
+            repo_url: "https://github.com/SingleStepTests/8086"
+            test_dir: "v1"
+            needs_python: false
           - cpu: "8088"
             ranges: "00-3F 40-7F 80-9F A0-BF C0-DF E0-FF"
             repo_url: "https://github.com/SingleStepTests/8088"
