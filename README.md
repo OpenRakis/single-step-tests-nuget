@@ -5,6 +5,7 @@ This project packages hardware-generated CPU test suites from the SingleStepTest
 - [SingleStepTests/8086](https://github.com/SingleStepTests/8086) - Intel 8086 CPU test suite
 - [SingleStepTests/8088](https://github.com/SingleStepTests/8088) - Intel 8088 CPU test suite
 - [SingleStepTests/80286](https://github.com/SingleStepTests/80286) - Intel 80286 CPU test suite
+- [SingleStepTests/80386](https://github.com/SingleStepTests/80386) - Intel 80386 CPU test suite
 
 ## What Are Single Step Tests?
 
