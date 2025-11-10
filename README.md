@@ -19,7 +19,7 @@ This project automates the packaging process for all test suites:
 3. **Convert** the extracted files to JSON format if in MOO format
 4. **Split** the test files by opcode range when needed to stay within NuGet's 500MB package limit
 5. **Package** each range into separate zip archives
-6. **Publish** as NuGet packages, one per opcode range (or a single package if small enough)
+6. **Publish** as NuGet packages, one per opcode range (or a single package if small enough). See theme [here](https://www.nuget.org/packages?q=SingleStepTests.Intel80)!
 
 ### Package Naming Convention
 
