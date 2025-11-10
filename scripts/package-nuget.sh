@@ -112,7 +112,7 @@ For complete documentation about the test format, usage instructions, and test m
 
 ## Credits
 
-All credit goes to the maintainers of the SingleStepTests project for generating these hardware-validated test suites.
+All credit goes to [Daniel Balsom](https://github.com/dbalsom) for his incredible work in generating these hardware-validated test suites. This project simply repackages his tests for easier consumption in .NET projects.
 
 ## License
 

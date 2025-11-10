@@ -37,7 +37,12 @@ jobs:
             repo_url: "https://github.com/SingleStepTests/80286"
             test_dir: "v1_real_mode"
             needs_python: true
-    
+          - cpu: "80386"
+            ranges: "00-65 66-66 67.00-67.7F 67.80-67.FF 68-FF"
+            repo_url: "https://github.com/SingleStepTests/80386"
+            test_dir: "v1_ex_real_mode"
+            needs_python: true
+
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v4

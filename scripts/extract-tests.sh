@@ -31,6 +31,9 @@ set -euo pipefail
 #   ./extract-tests.sh 80286 https://github.com/SingleStepTests/80286.git v1_real_mode
 ################################################################################
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 CPU_NAME=$1
 REPO_URL=$2
 TEST_DIR=$3
@@ -109,7 +112,7 @@ for file in "${TESTS_DIR}"/*; do
             basename_no_ext="${basename_no_ext%.MOO}"
             
             echo "  Converting $filename to ${basename_no_ext}.json..."
-            python3 "${REPO_DIR}/tools/moo2json.py" "$file" "${TESTS_DIR}/${basename_no_ext}.json"
+            python3 "${SCRIPT_DIR}/moo2json.py" "$file" "${TESTS_DIR}/${basename_no_ext}.json"
             
             # Remove the .moo file after successful conversion
             rm "$file"
@@ -124,6 +127,14 @@ fi
 # Copy LICENSE file
 echo "Copying LICENSE..."
 cp "${REPO_DIR}/LICENSE" "${TESTS_DIR}/SingleStepTests-LICENSE"
+
+# Copy revocation list if it exists
+if [ -f "${REPO_DIR}/revocation_list.txt" ]; then
+    echo "Copying revocation_list.txt..."
+    cp "${REPO_DIR}/revocation_list.txt" "${TESTS_DIR}/revocation_list.txt"
+else
+    touch "${TESTS_DIR}/revocation_list.txt"
+fi
 
 # Count extracted test files
 test_count=$(find "${TESTS_DIR}" -name "*.json" | wc -l)
